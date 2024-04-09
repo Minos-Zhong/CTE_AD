@@ -1,0 +1,37 @@
+conda install fastqc multiqc -y
+# 一：质控前的初看测序数据质量：fastqc与multiqc
+# 1.激活专门用于RNAseq数据处理的小环境rna,进行fastqc与multiqc
+conda activate zgy_1 #激活转录组测序数据处理的小环境
+# 2.先进行fastqc
+nohup fastqc -t 6 -o ./ SRR*.fastq.gz >qc.log &  
+# 3.对fastqc后的zip数据进行multiqc
+nohup multiqc ./*.zip -o ./ > ./multiqc.log &
+
+# 二:trimmgalore质控
+## 单端
+ls *gz |while read id;do (nohup trim_galore  -q 25 --phred33 --length 36 --stringency 3 -o ./  $id & );done
+## 双端
+    # 文件分类
+    ls | grep _1.fastq.gz > gz1
+    ls | grep _2.fastq.gz > gz2
+    paste gz1 gz2 > config
+    
+    vim trim.sh
+    
+    # trim.sh中的代码
+    dir=/hwfs2/share/Project/Test/ZZYTEST1/zgy_project/01_raw/all/tbi_paired/
+    cat config |while read id
+    do
+          arr=${id}
+          fq1=${arr[0]}
+          fq2=${arr[1]}
+          nohup trim_galore -q 25 --phred33 --length 36 --stringency 3 --paired -o $dir $fq1 $fq2 &
+    done
+    
+    # 运行脚本
+    bash trim.sh
+#三:质控后数据也需要用fastqc与multiqc看看质控效果
+# 01批量fastqc
+nohup fastqc -t 12 -o ./ SRR*_trimmed.fq.gz > qc_trimmed.log & 
+# 02开始multiqc
+nohup multiqc *trimmed_fastqc.zip -o ./ > ./multiqc_t.log &
