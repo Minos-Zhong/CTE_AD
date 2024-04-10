@@ -19,7 +19,7 @@ ls *gz |while read id;do (nohup trim_galore  -q 25 --phred33 --length 36 --strin
     vim trim.sh
     
     # trim.sh中的代码
-    dir=/hwfs2/share/Project/Test/ZZYTEST1/zgy_project/01_raw/all/tbi_paired/
+    dir=/hwfs2/share/Project/Test/ZZYTEST1/zgy_project/tbi/CTE_AD/PRJEB28518/01_trimmed
     cat config |while read id
     do
           arr=${id}
@@ -35,3 +35,51 @@ ls *gz |while read id;do (nohup trim_galore  -q 25 --phred33 --length 36 --strin
 nohup fastqc -t 12 -o ./ SRR*_trimmed.fq.gz > qc_trimmed.log & 
 # 02开始multiqc
 nohup multiqc *trimmed_fastqc.zip -o ./ > ./multiqc_t.log &
+
+##################################### 比对 #########################################
+#参考基因组下载
+# https://cloud.biohpc.swmed.edu/index.php/s/grcm38/download
+
+wget https://genome-idx.s3.amazonaws.com/hisat/grch38_genome.tar.gz
+tar -zxvf grch38_genome.tar.gz
+
+##单端
+ls *_trimmed.fq.gz|while read id;do 
+nohup sh -c 
+"hisat2 -p 2 -x /hwfs2/share/Project/Test/ZZYTEST1/zgy_project/00_ref/mm10/genome 
+-U $id 2>${id%%_*}_mm10.log |
+samtools sort -@ 2 -o /hwfs2/share/Project/Test/ZZYTEST1/zgy_project/ptsd/03_align/${id%%_*}.bam" & 
+done
+
+ls *_trimmed.fq.gz|while read id;do 
+nohup sh -c " hisat2 -p 2 -x /hwfs2/share/Project/Test/ZZYTEST1/zgy_project/00_ref/mm10/genome -U $id 2>${id%%_*}.log  | samtools sort -@ 2 -o /hwfs2/share/Project/Test/ZZYTEST1/zgy_project/ptsd/03_align/${id%%_*}.bam  " & 
+done
+
+#### 查看挂起程序
+ps -ef | grep nohup
+####
+
+## 双端
+ls *fq.gz | cut -d "_" -f 1 |while read id;do 
+ nohup sh -c " hisat2 -p 2 -x /hwfs2/share/Project/Test/ZZYTEST1/zgy_project/00_ref/grcm38/genome  -1 ${id}_1_val_1.fq.gz -2 ${id}_2_val_2.fq.gz  2>${id%%_*}.log  | samtools sort -@ 2 -o /hwfs2/share/Project/Test/ZZYTEST1/zgy_project/tbi/03_align/${id%%_*}.bam  " & 
+done
+
+############################## 定量 ###################################
+wget https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_45/gencode.v45.annotation.gtf.gz
+gunzip gencode.v45.annotation.gtf.gz
+##单端
+nohup featureCounts -T 5 -p -t exon -g gene_id  -a /hwfs2/share/Project/Test/ZZYTEST1/zgy_project/00_ref/gencode.vM34.annotation.gtf \
+-o /hwfs2/share/Project/Test/ZZYTEST1/zgy_project/ptsd/04_matrix/all_3.id.txt *bam 1>counts_3.id.log 2>&1 &
+
+nohup featureCounts -T 5 -p -t exon -g gene_id  -a /hwfs2/share/Project/Test/ZZYTEST1/zgy_project/00_ref/Mus_musculus.GRCm39.111.gtf \
+-o /hwfs2/share/Project/Test/ZZYTEST1/zgy_project/ptsd/04_matrix/all_4.id.txt *bam 1>counts_4.id.log 2>&1 &
+
+nohup featureCounts -T 5 -p -t exon -g gene_id  -a /hwfs2/share/Project/Test/ZZYTEST1/zgy_project/00_ref/gencode.vM25.annotation.gtf \
+-o /hwfs2/share/Project/Test/ZZYTEST1/zgy_project/ptsd/04_matrix/v1/all_5.id.txt *bam 1>counts_5.id.log 2>&1 &
+
+##双端
+nohup featureCounts -T 5 -p -t exon -g gene_id  -a /hwfs2/share/Project/Test/ZZYTEST1/zgy_project/00_ref/gencode.vM25.annotation.gtf \
+-o  /hwfs2/share/Project/Test/ZZYTEST1/zgy_project/tbi/04_matrix/all.id.txt *bam 1>counts.id.log 2>&1 &
+
+nohup featureCounts -T 5 -p -t exon -g gene_id  -a /hwfs2/share/Project/Test/ZZYTEST1/zgy_project/00_ref/Mus_musculus.GRCm39.111.gtf \
+-o  /hwfs2/share/Project/Test/ZZYTEST1/zgy_project/tbi/04_matrix/all_2.id.txt *bam 1>counts_2.id.log 2>&1 &
