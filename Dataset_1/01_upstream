@@ -52,7 +52,7 @@ samtools sort -@ 2 -o /hwfs2/share/Project/Test/ZZYTEST1/zgy_project/ptsd/03_ali
 done
 
 ls *_trimmed.fq.gz|while read id;do 
-nohup sh -c " hisat2 -p 2 -x /hwfs2/share/Project/Test/ZZYTEST1/zgy_project/00_ref/mm10/genome -U $id 2>${id%%_*}.log  | samtools sort -@ 2 -o /hwfs2/share/Project/Test/ZZYTEST1/zgy_project/ptsd/03_align/${id%%_*}.bam  " & 
+nohup sh -c " hisat2 -p 2 -x /hwfs2/share/Project/Test/ZZYTEST1/zgy_project/00_ref/human/grch38/genome -U $id 2>${id%%_*}.log  | samtools sort -@ 2 -o /hwfs2/share/Project/Test/ZZYTEST1/zgy_project/tbi/CTE_AD/PRJEB28518/02_align/${id%%_*}.bam  " & 
 done
 
 #### 查看挂起程序
@@ -61,7 +61,7 @@ ps -ef | grep nohup
 
 ## 双端
 ls *fq.gz | cut -d "_" -f 1 |while read id;do 
- nohup sh -c " hisat2 -p 2 -x /hwfs2/share/Project/Test/ZZYTEST1/zgy_project/00_ref/grcm38/genome  -1 ${id}_1_val_1.fq.gz -2 ${id}_2_val_2.fq.gz  2>${id%%_*}.log  | samtools sort -@ 2 -o /hwfs2/share/Project/Test/ZZYTEST1/zgy_project/tbi/03_align/${id%%_*}.bam  " & 
+ nohup sh -c " hisat2 -p 2 -x /hwfs2/share/Project/Test/ZZYTEST1/zgy_project/00_ref/human/grch38/genome  -1 ${id}_1_val_1.fq.gz -2 ${id}_2_val_2.fq.gz  2>${id%%_*}.log  | samtools sort -@ 2 -o /hwfs2/share/Project/Test/ZZYTEST1/zgy_project/tbi/CTE_AD/PRJEB28518/test/${id%%_*}.bam  " & 
 done
 
 ############################## 定量 ###################################
