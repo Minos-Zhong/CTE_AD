@@ -70,12 +70,15 @@ ls *_1.fq.gz | cut -d "_" -f 1 |while read id;do
 -S "${dir}${id%%_*}.sam" > "${dir}${id%%_*}.log" 2>&1
 done
 
+ls *.sam| cut -d "." -f 1 |while read id ;do 
+/nis_home/zhaozhiyong/mysoft/miniconda3/envs/zgy_1/bin/samtools sort -@ 6 -o "${dir}${id%%.*}.bam" ${id}
+done
+
 echo ==========end at : `date "+%Y-%m-%d %H:%M:%S"` ========== &&
 echo Still_waters_run_deep 1>&2 &&ll
 echo Still_waters_run_deep > /hwfs2/share/Project/Test/ZZYTEST1/zgy_project/tbi/CTE_AD/PRJEB28518/02_align/test.sh.sign
 
 
-bash hisat.sh
 
 
 
