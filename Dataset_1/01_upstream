@@ -57,12 +57,22 @@ ps -ef | grep nohup
 ####
 
 ## 双端
-dir=/hwfs2/share/Project/Test/ZZYTEST1/zgy_project/tbi/CTE_AD/PRJEB28518/02_align/
-    ls *_1.fq.gz | cut -d "_" -f 1 |while read id;do 
-    nohup hisat2 -p 4 -x /hwfs2/share/Project/Test/ZZYTEST1/zgy_project/00_ref/human/grch38/genome -1 ${id}_1_val_1.fq.gz -2 ${id}_2_val_2.fq.gz  -S "${dir}${id%%_*}.sam" > "${dir}${id%%_*}.log" 2>&1 & 
+#!/usr/bin/bash
+echo hostname: `hostname`
+echo ==========start at : `date "+%Y-%m-%d %H:%M:%S"` ========== &&
+cd /hwfs2/share/Project/Test/ZZYTEST1/zgy_project/tbi/CTE_AD/PRJEB28518/01_trimmed && \
+dir=/hwfs2/share/Project/Test/ZZYTEST1/zgy_project/tbi/CTE_AD/PRJEB28518/02_align/ \
+
+ls *_1.fq.gz | cut -d "_" -f 1 |while read id;do 
+/nis_home/zhaozhiyong/mysoft/miniconda3/envs/zgy_1/bin/hisat2 -p 4 \
+-x /hwfs2/share/Project/Test/ZZYTEST1/zgy_project/00_ref/human/grch38/genome \
+-1 ${id}_1_val_1.fq.gz -2 ${id}_2_val_2.fq.gz  \
+-S "${dir}${id%%_*}.sam" > "${dir}${id%%_*}.log" 2>&1
 done
 
-echo "Congrats! Alignment is done!"
+echo ==========end at : `date "+%Y-%m-%d %H:%M:%S"` ========== &&
+echo Still_waters_run_deep 1>&2 &&ll
+echo Still_waters_run_deep > /hwfs2/share/Project/Test/ZZYTEST1/zgy_project/tbi/CTE_AD/PRJEB28518/02_align/test.sh.sign
 
 
 bash hisat.sh
