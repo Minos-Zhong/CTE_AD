@@ -64,7 +64,7 @@ cd /hwfs2/share/Project/Test/ZZYTEST1/zgy_project/tbi/CTE_AD/PRJEB28518/01_trimm
 dir=/hwfs2/share/Project/Test/ZZYTEST1/zgy_project/tbi/CTE_AD/PRJEB28518/02_align/ \
 
 ls *_1.fq.gz | cut -d "_" -f 1 |while read id;do 
-/nis_home/zhaozhiyong/mysoft/miniconda3/envs/zgy_1/bin/hisat2 -p 4 \
+/nis_home/zhaozhiyong/mysoft/miniconda3/envs/zgy_1/bin/hisat2 -p 8 \
 -x /hwfs2/share/Project/Test/ZZYTEST1/zgy_project/00_ref/human/grch38/genome \
 -1 ${id}_1_val_1.fq.gz -2 ${id}_2_val_2.fq.gz  \
 -S "${dir}${id%%_*}.sam" > "${dir}${id%%_*}.log" 2>&1
