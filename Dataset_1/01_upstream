@@ -88,3 +88,5 @@ gunzip gencode.v45.annotation.gtf.gz
 nohup featureCounts -T 6 -p -t exon -g gene_id  -a /hwfs2/share/Project/Test/ZZYTEST1/zgy_project/00_ref/human/gencode.v45.annotation.gtf \
 -o  /hwfs2/share/Project/Test/ZZYTEST1/zgy_project/tbi/CTE_AD/PRJEB28518/03_matrix/all.id.txt *bam 1>/hwfs2/share/Project/Test/ZZYTEST1/zgy_project/tbi/CTE_AD/PRJEB28518/03_matrix/counts.id.log 2>&1 &
 
+nohup featureCounts -T 8 -p -t exon -g gene_id  -a /hwfs2/share/Project/Test/ZZYTEST1/zgy_project/00_ref/human/Homo_sapiens.GRCh38.111.gtf \
+-o  /hwfs2/share/Project/Test/ZZYTEST1/zgy_project/tbi/CTE_AD/PRJEB28518/03_matrix/all_2.id.txt *bam 1>/hwfs2/share/Project/Test/ZZYTEST1/zgy_project/tbi/CTE_AD/PRJEB28518/03_matrix/counts_2.id.log 2>&1 &
