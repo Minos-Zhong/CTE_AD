@@ -79,25 +79,12 @@ echo Still_waters_run_deep 1>&2 &&ll
 echo Still_waters_run_deep > /hwfs2/share/Project/Test/ZZYTEST1/zgy_project/tbi/CTE_AD/PRJEB28518/02_align/test.sh.sign
 
 
-
-
-
 ############################## 定量 ###################################
 wget https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_45/gencode.v45.annotation.gtf.gz
 gunzip gencode.v45.annotation.gtf.gz
-##单端
-nohup featureCounts -T 5 -p -t exon -g gene_id  -a /hwfs2/share/Project/Test/ZZYTEST1/zgy_project/00_ref/gencode.vM34.annotation.gtf \
--o /hwfs2/share/Project/Test/ZZYTEST1/zgy_project/ptsd/04_matrix/all_3.id.txt *bam 1>counts_3.id.log 2>&1 &
 
-nohup featureCounts -T 5 -p -t exon -g gene_id  -a /hwfs2/share/Project/Test/ZZYTEST1/zgy_project/00_ref/Mus_musculus.GRCm39.111.gtf \
--o /hwfs2/share/Project/Test/ZZYTEST1/zgy_project/ptsd/04_matrix/all_4.id.txt *bam 1>counts_4.id.log 2>&1 &
-
-nohup featureCounts -T 5 -p -t exon -g gene_id  -a /hwfs2/share/Project/Test/ZZYTEST1/zgy_project/00_ref/gencode.vM25.annotation.gtf \
--o /hwfs2/share/Project/Test/ZZYTEST1/zgy_project/ptsd/04_matrix/v1/all_5.id.txt *bam 1>counts_5.id.log 2>&1 &
 
 ##双端
-nohup featureCounts -T 5 -p -t exon -g gene_id  -a /hwfs2/share/Project/Test/ZZYTEST1/zgy_project/00_ref/gencode.vM25.annotation.gtf \
--o  /hwfs2/share/Project/Test/ZZYTEST1/zgy_project/tbi/04_matrix/all.id.txt *bam 1>counts.id.log 2>&1 &
+nohup featureCounts -T 6 -p -t exon -g gene_id  -a /hwfs2/share/Project/Test/ZZYTEST1/zgy_project/00_ref/human/gencode.v45.annotation.gtf \
+-o  /hwfs2/share/Project/Test/ZZYTEST1/zgy_project/tbi/CTE_AD/PRJEB28518/03_matrix/all.id.txt *bam 1>/hwfs2/share/Project/Test/ZZYTEST1/zgy_project/tbi/CTE_AD/PRJEB28518/03_matrix/counts.id.log 2>&1 &
 
-nohup featureCounts -T 5 -p -t exon -g gene_id  -a /hwfs2/share/Project/Test/ZZYTEST1/zgy_project/00_ref/Mus_musculus.GRCm39.111.gtf \
--o  /hwfs2/share/Project/Test/ZZYTEST1/zgy_project/tbi/04_matrix/all_2.id.txt *bam 1>counts_2.id.log 2>&1 &
