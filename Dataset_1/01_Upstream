@@ -90,3 +90,24 @@ gunzip gencode.v45.annotation.gtf.gz
 
 nohup featureCounts -T 8 -p -t exon -g gene_id  -a /hwfs2/share/Project/Test/ZZYTEST1/zgy_project/00_ref/human/Homo_sapiens.GRCh38.111.gtf \
 -o  /hwfs2/share/Project/Test/ZZYTEST1/zgy_project/tbi/CTE_AD/PRJEB28518/03_matrix/all_2.id.txt *bam 1>/hwfs2/share/Project/Test/ZZYTEST1/zgy_project/tbi/CTE_AD/PRJEB28518/03_matrix/counts_2.id.log 2>&1 &
+
+########################### gene_id 转换 ##########################
+
+vim gtf_geneid2symbol_Homo_sapiens.GRCh38.111.sh
+#提取gtf注释文件中gene_id等与gene_name的对应关系,便于下游id转换
+gtf="Homo_sapiens.GRCh38.111.gtf"
+
+### gene_id to gene_name
+grep 'gene_id' $gtf | awk -F 'gene_id \"' '{print $2}' |awk -F '\"' '{print $1}' >gene_id_tmp
+grep 'gene_id' $gtf | awk -F 'gene_name \"' '{print $2}' |awk -F '\"' '{print $1}' >gene_name_tmp
+paste gene_id_tmp gene_name_tmp >last_tmp
+uniq last_tmp >g2s_Homo_sapiens.GRCh38.111.txt
+rm *_tmp
+
+### transcript_id to gene_name
+grep 'transcript_id' $gtf | awk -F 'transcript_id \"' '{print $2}' |awk -F '\"' '{print $1}' >gene_id_tmp
+grep 'transcript_id' $gtf | awk -F 'gene_name \"' '{print $2}' |awk -F '\"' '{print $1}' >gene_name_tmp
+paste gene_id_tmp gene_name_tmp >last_tmp
+uniq last_tmp >t2s_Homo_sapiens.GRCh38.111.txt
+rm *_tmp
+bash gtf_geneid2symbol_Homo_sapiens.GRCh38.111.sh
